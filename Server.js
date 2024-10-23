@@ -25,7 +25,7 @@ const isCacheValid = () => {
 const fetchPokemonData = async () => {
     try {
         // Gọi API để lấy danh sách Pokémon với giới hạn là 1302
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=100');
+        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1227');
 
         // Fetch chi tiết từng Pokémon và tạo một mảng chi tiết
         const detailedPokemon = await Promise.all(
