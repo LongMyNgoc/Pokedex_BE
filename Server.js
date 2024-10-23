@@ -47,7 +47,7 @@ const fetchPokemonDataByBatch = async (offset, limit) => {
 const fetchAllPokemonData = async () => {
     let allPokemon = [];
     const limit = 200; // Fetch theo từng lô 200 Pokémon
-    const total = 999; // Tổng số Pokémon
+    const total = 1200; // Tổng số Pokémon
     for (let offset = 0; offset < total; offset += limit) {
         const pokemonBatch = await fetchPokemonDataByBatch(offset, limit);
         allPokemon = [...allPokemon, ...pokemonBatch];
