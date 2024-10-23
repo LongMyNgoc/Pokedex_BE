@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Hàm để fetch dữ liệu từ PokeAPI theo từng lô nhỏ
-export const fetchPokemonDataByBatch = async (offset, limit) => {
+export const fetchAllPokemonData = async (offset, limit) => {
     try {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
         const detailedPokemon = await Promise.all(
@@ -26,4 +26,4 @@ export const fetchPokemonDataByBatch = async (offset, limit) => {
         console.error('Error fetching data from PokeAPI:', error);
         throw new Error('Failed to fetch Pokémon data from PokeAPI');
     }
-};
+};  
