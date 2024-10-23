@@ -11,23 +11,18 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], // Các header được phép sử dụng
 }));
 
-// Biến toàn cục để lưu dữ liệu Pokémon đã fetch và thời gian hết hạn cache
+// Biến toàn cục để lưu dữ liệu Pokémon đã fetch
 let cachedPokemonData = [];
-let cacheExpirationTime = 0;
 
-// Hàm để kiểm tra xem dữ liệu cache có còn hợp lệ không
+// Hàm để kiểm tra xem cache có còn hợp lệ không (chỉ cần kiểm tra dữ liệu đã được fetch hay chưa)
 const isCacheValid = () => {
-    const now = Date.now();
-    return cachedPokemonData.length > 0 && now < cacheExpirationTime;
+    return cachedPokemonData.length > 0; // Cache hợp lệ nếu có dữ liệu
 };
 
-// Hàm để fetch dữ liệu từ PokeAPI
-const fetchPokemonData = async () => {
+// Hàm để fetch dữ liệu từ PokeAPI theo từng lô nhỏ
+const fetchPokemonDataByBatch = async (offset, limit) => {
     try {
-        // Gọi API để lấy danh sách Pokémon với giới hạn là 1302
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1025');
-
-        // Fetch chi tiết từng Pokémon và tạo một mảng chi tiết
+        const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
         const detailedPokemon = await Promise.all(
             response.data.results.map(async (pokemon, index) => {
                 const pokemonData = await axios.get(pokemon.url);
@@ -37,21 +32,27 @@ const fetchPokemonData = async () => {
                     types: pokemonData.data.types.map(type => type.type.name),
                     generation: 'Gen 1', // Bạn có thể thay đổi logic này nếu cần
                     version: 'Red/Blue', // Bạn có thể thay đổi thông tin này nếu cần
-                    number: index + 1,
+                    number: offset + index + 1, // Tính toán số thứ tự dựa trên offset
                 };
             })
         );
-
-        // Cập nhật cache với dữ liệu mới và đặt thời gian hết hạn là 1 giờ (3600000 ms)
-        cachedPokemonData = detailedPokemon;
-        cacheExpirationTime = Date.now() + 3600000; // Cache hết hạn sau 1 giờ
         return detailedPokemon;
-
     } catch (error) {
-        // Log lỗi và trả về null nếu có vấn đề xảy ra
         console.error('Error fetching data from PokeAPI:', error);
         throw new Error('Failed to fetch Pokémon data from PokeAPI');
     }
+};
+
+// Hàm để fetch toàn bộ dữ liệu Pokémon (1302 Pokémon)
+const fetchAllPokemonData = async () => {
+    let allPokemon = [];
+    const limit = 205; // Fetch theo từng lô 200 Pokémon
+    const total = 1025; // Tổng số Pokémon
+    for (let offset = 0; offset < total; offset += limit) {
+        const pokemonBatch = await fetchPokemonDataByBatch(offset, limit);
+        allPokemon = [...allPokemon, ...pokemonBatch];
+    }
+    return allPokemon;
 };
 
 // Endpoint để phục vụ dữ liệu Pokémon
@@ -60,7 +61,8 @@ app.get('/', async (req, res) => {
         // Kiểm tra xem cache có còn hợp lệ không
         if (!isCacheValid()) {
             // Nếu cache không hợp lệ, fetch dữ liệu mới
-            const pokemonData = await fetchPokemonData();
+            const pokemonData = await fetchAllPokemonData();
+            cachedPokemonData = pokemonData; // Cập nhật cache
             res.json(pokemonData);
         } else {
             // Nếu cache hợp lệ, trả về dữ liệu đã được cache
