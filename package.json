@@ -1,7 +1,7 @@
 {
     "name": "pokedex-be",
     "version": "1.0.0",
-    "main": "Server.js",
+    "main": "index.js",
     "type": "module",  
     "scripts": {
       "start": "node index.js"
