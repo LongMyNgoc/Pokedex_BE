@@ -31,7 +31,6 @@ const fetchPokemonDataByBatch = async (offset, limit) => {
                     sprite: pokemonData.data.sprites.front_default,
                     types: pokemonData.data.types.map(type => type.type.name),
                     generation: 'Gen 1', // Bạn có thể thay đổi logic này nếu cần
-                    version: 'Red/Blue', // Bạn có thể thay đổi thông tin này nếu cần
                     number: offset + index + 1, // Tính toán số thứ tự dựa trên offset
                 };
             })
