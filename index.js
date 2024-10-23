@@ -12,7 +12,7 @@ app.use(cors({
 }));
 
 // Sử dụng route cho Pokémon
-app.use('/pokemon', pokemonRoutes);
+app.use('/', pokemonRoutes);
 
 // Khởi động server tại một cổng cố định
 const PORT = process.env.PORT || 3000;
