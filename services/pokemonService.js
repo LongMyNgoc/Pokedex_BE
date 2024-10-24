@@ -13,27 +13,6 @@ const calculateGeneration = (number) => {
     return 'Gen 9'; // 899 trở đi
 };
 
-// Hàm để lấy chuỗi tiến hóa từ URL evolution chain
-const fetchEvolutionChain = async (url) => {
-    try {
-        const response = await axios.get(url);
-        const chain = [];
-        let currentEvolution = response.data.chain;
-
-        // Duyệt qua toàn bộ chuỗi tiến hóa
-        while (currentEvolution) {
-            chain.push({
-                name: currentEvolution.species.name,
-            });
-            currentEvolution = currentEvolution.evolves_to[0];
-        }
-        return chain;
-    } catch (error) {
-        console.error('Error fetching evolution chain:', error);
-        return null;
-    }
-};
-
 // Hàm để fetch dữ liệu từ PokeAPI theo từng lô nhỏ
 export const fetchPokemonDataByBatch = async (offset, limit) => {
     try {
@@ -41,18 +20,13 @@ export const fetchPokemonDataByBatch = async (offset, limit) => {
         const detailedPokemon = await Promise.all(
             response.data.results.map(async (pokemon, index) => {
                 const pokemonData = await axios.get(pokemon.url);
-                const speciesData = await axios.get(pokemonData.data.species.url);
-
                 const number = offset + index + 1; // Tính toán số thứ tự dựa trên offset
-                const evolutionChain = await fetchEvolutionChain(speciesData.data.evolution_chain.url); // Lấy chuỗi tiến hóa
-
                 return {
                     name: pokemonData.data.name,
                     sprite: pokemonData.data.sprites.front_default,
                     types: pokemonData.data.types.map(type => type.type.name),
                     generation: calculateGeneration(number), // Tính toán thế hệ
                     number: number,
-                    evolutionChain: evolutionChain, // Thêm chuỗi tiến hóa
                 };
             })
         );
