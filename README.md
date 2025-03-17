@@ -32,7 +32,7 @@ npm run start
 
 ## Liên kết hệ thống
 - **Back-End (GitHub)**: https://github.com/LongMyNgoc/Pokedex_BE.git
-- **Front-End (GitHub)**: https://github.com/LongMyNgoc/Pokedex-React-Native-Expo.git
+- **Front-End (GitHub)**: https://github.com/LongMyNgoc/Pokedex-App.git
 - **Back-End (Vercel)**: https://pokedex-be.vercel.app/
 
 ## Link
