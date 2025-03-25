@@ -1,4 +1,9 @@
 # Từ điền Pokemon (BACK-END)
+<p align="center">
+  <img src="https://github.com/LongMyNgoc/Pokedex-App/blob/main/assets/HomeScreen.png" alt="Home Screen" width="300" style="display: inline-block;">
+  <img src="https://github.com/LongMyNgoc/Pokedex-App/blob/main/assets/DetailScreen.png" alt="Detail Screen" width="300" style="display: inline-block;">
+  <img src="https://github.com/LongMyNgoc/Pokedex-App/blob/main/assets/EvolutionScreen.png" alt="Evolution Screen" width="300" style="display: inline-block;">
+</p>
 
 ## Giới thiệu
 **Từ điển Pokemon** là ứng dụng di động tìm kiếm Pokemon từ Gen 1 đến Gen 9 gồm 1025 Pokemon
